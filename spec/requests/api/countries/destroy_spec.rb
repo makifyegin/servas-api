@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe "DELETE /api/countries/:id", type: :request do
   let(:group) { create(:group) }
   let(:country) { create(:country, group_id: group.id) }
+  let(:region) { create(:region, country: country) }
   let(:headers) { { "Authorization" => "Bearer fake-token" } }
   it "responds 401 Unauthorized when no token is given" do
     delete "/api/countries/#{country.id}"
@@ -18,7 +19,11 @@ RSpec.describe "DELETE /api/countries/:id", type: :request do
       delete "/api/countries/#{country.id}", headers: headers
       expect(response).to have_http_status(:no_content)
     end
-    it "responds 422 Unprocessable Content when the country has regions"
+    it "responds 422 Unprocessable Content when the country has regions" do
+      region
+      delete "/api/countries/#{country.id}", headers: headers
+      expect(response).to have_http_status(:unprocessable_content)
+    end
   end
 
   context "when the user is a member" do

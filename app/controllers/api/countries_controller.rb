@@ -30,9 +30,13 @@ module Api
     end
 
     def destroy
-      country = Country.find(params[:id])
-      country.destroy
-      head :no_content
+      result = Country::Delete.call(country_id: params[:id])
+
+      if result.success?
+        head :no_content
+      else
+        render json: { error: result[:error] }, status: :unprocessable_content
+      end
     end
 
     private
