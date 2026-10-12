@@ -19,6 +19,10 @@ RSpec.describe "DELETE /api/countries/:id", type: :request do
       delete "/api/countries/#{country.id}", headers: headers
       expect(response).to have_http_status(:no_content)
     end
+    it "responds 404 Not Found when the country does not exist" do
+      delete "/api/countries/0", headers: headers
+      expect(response).to have_http_status(:not_found)
+    end
     it "responds 422 Unprocessable Content when the country has regions" do
       region
       delete "/api/countries/#{country.id}", headers: headers
