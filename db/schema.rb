@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_06_220706) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_13_223109) do
   create_table "countries", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -41,6 +41,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_06_220706) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["country_id"], name: "index_regions_on_country_id"
+    t.index ["name", "country_id"], name: "index_regions_on_name_and_country_id", unique: true
   end
 
   create_table "roles", force: :cascade do |t|
