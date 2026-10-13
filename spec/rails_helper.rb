@@ -44,6 +44,13 @@ RSpec.configure do |config|
     Rails.root.join('spec/fixtures')
   ]
 
+  config.include ActiveSupport::Testing::TimeHelpers
+
+  config.around(type: :request) do |example|
+    travel_to(Time.zone.local(2026, 1, 1, 12, 0, 0)) { example.run }
+  end
+
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
