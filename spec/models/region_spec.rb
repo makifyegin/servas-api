@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Region, type: :model do
+  let(:country) { create(:country) }
   it "has a valid factory" do
     region = build(:region)
     expect(region).to be_valid
@@ -26,5 +27,16 @@ RSpec.describe Region, type: :model do
     member = create(:member, region: region)
     region.destroy
     expect(Region.exists?(region.id)).to be true
+  end
+
+  it "allows the same region name in different countries" do
+    region1 = create(:region, name: "York", country: create(:country))
+    region2 = build(:region, name: "York", country: create(:country))
+    expect(region2).to be_valid
+  end
+  it "doesn't allow the same region name in same country" do
+    create(:region, name: "York", country: country)
+    region2 = build(:region, name: "York", country: country)
+    expect(region2).not_to be_valid
   end
 end
