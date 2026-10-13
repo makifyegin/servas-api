@@ -1,32 +1,32 @@
 module Api
   class CountriesController < Api::ApiController
     before_action :authorize_admin!, only: [ :create, :update, :destroy ]
-    before_action :set_country, only: [ :destroy ]
+    before_action :set_country, only: [ :destroy, :update, :show ]
   def index
     @countries = Country.all
     render json: @countries
   end
 
   def show
-    country = Country.find(params[:id])
-    render json: country
+    render json: @country
   end
 
     def create
-      country = Country.new(country_params)
-      if country.save
-        render json: country, status: :created
+      result = Country::Create.call(country_params: country_params)
+      if result.success?
+        render json: result[:country], status: :created        # take the country out of the box
       else
-        render json: { error: "Unable to create country" }, status: :unprocessable_entity
+        render json: { error: result[:error] }, status: :unprocessable_content
       end
     end
 
     def update
-      country = Country.find(params[:id])
-      if country.update(country_params)
-        render json: country
+      result = Country::Update.call(country: @country, country_params:)
+
+      if result.success?
+        render json: result[:country]
       else
-        render json: country.errors, status: :unprocessable_entity
+        render json: { error: result[:error] }, status: :unprocessable_content
       end
     end
 
