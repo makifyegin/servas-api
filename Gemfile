@@ -53,7 +53,8 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 end
-gem "rswag", "~> 2.17"
+gem "rswag-api", "~> 2.17"
+gem "rswag-ui", "~> 2.17"
 
 gem "factory_bot_rails", "~> 6.5", groups: [ :development, :test ]
 
