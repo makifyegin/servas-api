@@ -65,7 +65,10 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Run tests
+      - name: Run tests and generate API docs
         env:
           RAILS_ENV: test
-        run: bin/rails db:test:prepare && bundle exec rspec
+        run: bin/rails db:test:prepare && OPENAPI=1 bundle exec rspec
+
+      - name: Check API docs are up to date
+        run: git diff --exit-code swagger/v1/openapi.yaml
