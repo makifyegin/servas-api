@@ -39,9 +39,9 @@ paths:
                   - group_id
               example:
               - id: 1
-                name: Nigeria
-                created_at: '2026-10-12T00:20:26.457Z'
-                updated_at: '2026-10-12T00:20:26.457Z'
+                name: Serbia
+                created_at: '2026-10-12T00:21:22.651Z'
+                updated_at: '2026-10-12T00:21:22.651Z'
                 group_id: 2
         '401':
           description: responds 401 Unauthorized when no token is given
@@ -115,10 +115,10 @@ paths:
                 - group_id
               example:
                 id: 2
-                created_at: '2026-10-12T00:20:26.166Z'
+                created_at: '2026-10-12T00:21:22.399Z'
                 group_id: 2
                 name: Ireland
-                updated_at: '2026-10-12T00:20:26.166Z'
+                updated_at: '2026-10-12T00:21:22.399Z'
         '400':
           description: responds 400 Bad Request when the country params are missing
           content:
@@ -2969,10 +2969,10 @@ paths:
                 - group_id
               example:
                 id: 1
-                created_at: '2026-10-12T00:20:26.467Z'
+                created_at: '2026-10-12T00:21:22.661Z'
                 group_id: 2
                 name: Ireland
-                updated_at: '2026-10-12T00:20:26.467Z'
+                updated_at: '2026-10-12T00:21:22.661Z'
         '401':
           description: Responds 401 Unauthorized when no token is given
           content:
@@ -3055,9 +3055,9 @@ paths:
               example:
                 name: New Country Name
                 id: 1
-                created_at: '2026-10-12T00:20:26.473Z'
+                created_at: '2026-10-12T00:21:22.668Z'
                 group_id: 2
-                updated_at: '2026-10-12T00:20:26.477Z'
+                updated_at: '2026-10-12T00:21:22.671Z'
         '400':
           description: responds 400 Bad Request when the country params are missing
           content:

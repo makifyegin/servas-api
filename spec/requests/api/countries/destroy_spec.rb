@@ -15,9 +15,10 @@ RSpec.describe "DELETE /api/countries/:id", type: :request do
       stub_authenticated_user(sub: "admin1")
       create(:role, user_id: "admin1", role: "admin")
     end
-    it "responds 204 admin can delete country" do
+    it "responds 204 No Content and deletes the country" do
       delete "/api/countries/#{country.id}", headers: headers
       expect(response).to have_http_status(:no_content)
+      expect(Country.find_by(id: country.id)).to be_nil
     end
     it "responds 404 Not Found when the country does not exist" do
       delete "/api/countries/0", headers: headers
@@ -31,5 +32,15 @@ RSpec.describe "DELETE /api/countries/:id", type: :request do
   end
 
   context "when the user is a member" do
+    before do
+      stub_authenticated_user(sub: "member1")
+      create(:role, user_id: "member1", role: "member")
+    end
+
+    it "responds 403 Forbidden" do
+      delete "/api/countries/#{country.id}", headers: headers
+      expect(response).to have_http_status(:forbidden)
+      expect(Country.find_by(id: country.id)).to_not be_nil       # still exists
+    end
   end
 end
