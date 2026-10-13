@@ -5,7 +5,7 @@ RSpec.describe "GET /api/countries", type: :request do
     let(:headers) { { "Authorization" => "Bearer fake-token" } }
     before do
       stub_authenticated_user
-      create(:country)
+      create(:country, name: "Ireland")
     end
     it "responds 200 OK with all countries" do
       get "/api/countries", headers: headers
