@@ -14,7 +14,7 @@ class RegionsController < Api::ApiController
 
 
   def create
-    result = Region::Create.call(region_params: region_params)
+    result = Region::Create.call(region_params: set_params)
     if result.success?
       render json: result[:region], status: :created
     else
@@ -25,7 +25,7 @@ class RegionsController < Api::ApiController
 
   private
   def set_params
-    params_require(:region).permit(:name, :country_id)
+    params.require(:region).permit(:name, :country_id)
   end
   def set_region
     @region = Region.find(params[:id])
