@@ -1,11 +1,12 @@
 require "rails_helper"
 
-RSpec.describe "POST /api/regions", type: :request do
+RSpec.describe "PUT /api/countries/:country_id/regions/:id", type: :request do
   let(:country) { create(:country) }
-  let(:params) { { region: { name: "West Midlands" , country_id: country.id } } }
+  let(:region) { create(:region, country:) }
+  let(:params) { { region: { name: "Yorkshire" } } }
   let(:headers) { { "Authorization" => "Bearer fake-token" } }
   it "responds 401 Unauthorized when no token is given" do
-    post "/api/regions", params: params
+    put "/api/countries/#{country.id}/regions/#{region.id}", params: params
     expect(response).to have_http_status(:unauthorized)
   end
 
@@ -15,7 +16,7 @@ RSpec.describe "POST /api/regions", type: :request do
       create(:role, user_id: "member1", role: "member")
     end
     it "responds 403 Forbidden" do
-      post "/api/regions", headers: headers, params: params
+      put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers, params: params
       expect(response).to have_http_status(:forbidden)
     end
   end
@@ -25,18 +26,22 @@ RSpec.describe "POST /api/regions", type: :request do
       stub_authenticated_user(sub: "admin")
       create(:role, user_id: "admin", role: "admin")
     end
-    it "responds 201 Created with the new region" do
-      post "/api/regions", headers: headers, params: params
-      expect(response).to have_http_status(:created)
-      expect(Region.find_by(name: "West Midlands")).to_not be_nil
+    it "responds 200 OK with the new region" do
+      put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers, params: params
+      expect(response).to have_http_status(:ok)
+      expect(Region.find_by(name: "Yorkshire")).to_not be_nil
     end
     it "responds 422 Unprocessable Content when the name is blank" do
-      post "/api/regions", headers: headers, params: { region: { name: "", country_id: country.id } }
+      put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers, params: { region: { name: "", country_id: region.country.id } }
       expect(response).to have_http_status(:unprocessable_content)
     end
     it "responds 400 Bad Request when the region params are missing" do
-      post "/api/regions", headers: headers
+      put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers
       expect(response).to have_http_status(:bad_request)
+    end
+    it "responds 404 NOT FOUND when the region not exist" do
+      put "/api/countries/#{country.id}/regions/0", headers: headers, params: params
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

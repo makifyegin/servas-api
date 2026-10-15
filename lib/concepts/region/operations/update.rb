@@ -1,7 +1,6 @@
 class Region
   class Update
     class << self
-
       def call(region:, region_params:)
         response = OperationResponse.new
         response[:region] = region
@@ -14,6 +13,5 @@ class Region
         response
       end
     end
-
   end
 end

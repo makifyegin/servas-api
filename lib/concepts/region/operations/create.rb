@@ -3,9 +3,9 @@
 class Region
   class Create
     class << self
-      def call(region_params:)
+      def call(country:, region_params:)
         response = OperationResponse.new
-        response[:region] = build_region(region_params:)
+        response[:region] = build_region(country:, region_params:)
         response[:region].save!
         response
       rescue StandardError => e
@@ -16,8 +16,8 @@ class Region
 
       private
 
-      def build_region(region_params:)
-        Region.new(region_params)
+      def build_region(country:, region_params:)
+        country.regions.build(region_params)
       end
     end
   end
