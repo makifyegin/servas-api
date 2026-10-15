@@ -16,6 +16,11 @@ RSpec.describe "Showing a region", type: :request do
       get "/api/countries/#{country.id}/regions/0", headers: headers
       expect(response).to have_http_status(:not_found)
     end
+    it "responds 404 Not Found when the region belongs to another country" do
+      other_country = create(:country, name: "France")
+      get "/api/countries/#{other_country.id}/regions/#{region.id}", headers: headers
+      expect(response).to have_http_status(:not_found)
+    end
 
     it "responds 200 OK when the region exists" do
       region = create(:region, name: "London")

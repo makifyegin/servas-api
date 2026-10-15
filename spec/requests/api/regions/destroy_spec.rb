@@ -31,6 +31,13 @@ RSpec.describe "DELETE /api/countries/country_id/regions/:id", type: :request do
       delete "/api/countries/#{country.id}/regions/#{member.region.id}", headers: headers
       expect(response).to have_http_status(:unprocessable_content)
     end
+
+    it "responds 404 Not Found when the region belongs to another country" do
+      other_country = create(:country, name: "France")
+      delete "/api/countries/#{other_country.id}/regions/#{region.id}", headers: headers
+      expect(response).to have_http_status(:not_found)
+      expect(Region.find_by(id: region.id)).to_not be_nil
+    end
   end
 
   context "when the user is a member" do

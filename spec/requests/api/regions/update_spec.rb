@@ -43,5 +43,10 @@ RSpec.describe "PUT /api/countries/:country_id/regions/:id", type: :request do
       put "/api/countries/#{country.id}/regions/0", headers: headers, params: params
       expect(response).to have_http_status(:not_found)
     end
+    it "responds 404 Not Found when the region belongs to another country" do
+      other_country = create(:country, name: "France")
+      put "/api/countries/#{other_country.id}/regions/#{region.id}", headers: headers
+      expect(response).to have_http_status(:not_found)
+    end
   end
 end

@@ -383,7 +383,7 @@ paths:
               example:
                 error: Forbidden
         '404':
-          description: responds 404 Not Found when the region does not exist
+          description: responds 404 Not Found when the region belongs to another country
           content:
             application/json:
               schema:
@@ -394,7 +394,7 @@ paths:
                 required:
                 - error
               example:
-                error: Couldn't find Region with 'id'="0" [WHERE "regions"."country_id"
+                error: Couldn't find Region with 'id'="1" [WHERE "regions"."country_id"
                   = ?]
         '422':
           description: responds 422 Unprocessable Content when the region has members
@@ -470,7 +470,7 @@ paths:
               example:
                 error: Unauthorized
         '404':
-          description: responds 404 Not Found when the region does not exist
+          description: responds 404 Not Found when the region belongs to another country
           content:
             application/json:
               schema:
@@ -481,7 +481,7 @@ paths:
                 required:
                 - error
               example:
-                error: Couldn't find Region with 'id'="0" [WHERE "regions"."country_id"
+                error: Couldn't find Region with 'id'="1" [WHERE "regions"."country_id"
                   = ?]
     put:
       summary: update
@@ -499,7 +499,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 0
+        example: 1
       responses:
         '200':
           description: responds 200 OK with the new region
@@ -570,7 +570,7 @@ paths:
               example:
                 error: Forbidden
         '404':
-          description: responds 404 NOT FOUND when the region not exist
+          description: responds 404 Not Found when the region belongs to another country
           content:
             application/json:
               schema:
@@ -581,7 +581,7 @@ paths:
                 required:
                 - error
               example:
-                error: Couldn't find Region with 'id'="0" [WHERE "regions"."country_id"
+                error: Couldn't find Region with 'id'="1" [WHERE "regions"."country_id"
                   = ?]
         '422':
           description: responds 422 Unprocessable Content when the name is blank
