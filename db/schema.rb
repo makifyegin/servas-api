@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_13_223109) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_17_015552) do
   create_table "countries", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -23,6 +23,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_13_223109) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "parent_id"
+    t.index ["parent_id"], name: "index_groups_on_parent_id"
   end
 
   create_table "members", force: :cascade do |t|
@@ -52,6 +54,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_13_223109) do
   end
 
   add_foreign_key "countries", "groups"
+  add_foreign_key "groups", "groups", column: "parent_id"
   add_foreign_key "members", "regions"
   add_foreign_key "regions", "countries"
 end
