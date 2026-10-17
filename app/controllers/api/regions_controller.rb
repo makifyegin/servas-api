@@ -2,9 +2,9 @@
 
 module Api
 class RegionsController < Api::ApiController
-  before_action :authorize_admin!, only: [ :create, :update, :destroy ]
   before_action :set_country
-  before_action :set_region, only: [  :show, :update, :destroy ]
+  before_action :authorize_secretary!, only: %i[create update destroy]
+  before_action :set_region, only: %i[show update destroy]
   def index
     @regions = @country.regions
     render json: @regions
@@ -53,6 +53,12 @@ class RegionsController < Api::ApiController
   end
   def set_region
     @region = @country.regions.find(params[:id])
+  end
+
+  def authorize_secretary!
+    return if national_secretary_of?(@country.group)
+
+    render json: { error: "Forbidden" }, status: :forbidden
   end
 end
 end

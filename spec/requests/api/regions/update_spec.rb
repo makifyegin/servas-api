@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "PUT /api/countries/:country_id/regions/:id", type: :request do
   let(:country) { create(:country) }
-  let(:region) { create(:region, country:) }
+  let(:region) { create(:region, name: "West Midlands", country:) }
   let(:params) { { region: { name: "Yorkshire" } } }
   let(:headers) { { "Authorization" => "Bearer fake-token" } }
   it "responds 401 Unauthorized when no token is given" do
@@ -13,7 +13,6 @@ RSpec.describe "PUT /api/countries/:country_id/regions/:id", type: :request do
   context "when the user is a member" do
     before do
       stub_authenticated_user(sub: "member1")
-      create(:role, user_id: "member1", role: "member")
     end
     it "responds 403 Forbidden" do
       put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers, params: params
@@ -21,10 +20,10 @@ RSpec.describe "PUT /api/countries/:country_id/regions/:id", type: :request do
     end
   end
 
-  context "when the user is an admin" do
+  context "when the user is the national secretary of the country's group" do
     before do
-      stub_authenticated_user(sub: "admin")
-      create(:role, user_id: "admin", role: "admin")
+      stub_authenticated_user(sub: "secretary1")
+      create(:role, user_id: "secretary1", role: "national_secretary", group: country.group)
     end
     it "responds 200 OK with the new region" do
       put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers, params: params
@@ -44,9 +43,21 @@ RSpec.describe "PUT /api/countries/:country_id/regions/:id", type: :request do
       expect(response).to have_http_status(:not_found)
     end
     it "responds 404 Not Found when the region belongs to another country" do
-      other_country = create(:country, name: "France")
+      other_country = create(:country, name: "France", group: country.group)
       put "/api/countries/#{other_country.id}/regions/#{region.id}", headers: headers
       expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  context "when the user is the national secretary of another group" do
+    before do
+      stub_authenticated_user(sub: "secretary2")
+      create(:role, user_id: "secretary2", role: "national_secretary", group: create(:group, name: "Servas Germany"))
+    end
+    it "responds 403 Forbidden" do
+      put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers, params: params
+      expect(response).to have_http_status(:forbidden)
+      expect(region.reload.name).to eq("West Midlands")
     end
   end
 end

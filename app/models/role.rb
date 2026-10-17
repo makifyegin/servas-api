@@ -4,10 +4,13 @@ class Role < ApplicationRecord
   validate :exactly_one_place
 
   enum :role, {
-  member: "member",
-  admin: "admin",
-  owner: "owner"
-}
+    si_admin: "si_admin",
+    national_secretary: "national_secretary",
+    membership_secretary: "membership_secretary",
+    treasurer: "treasurer",
+    regional_coordinator: "regional_coordinator",
+    interviewer: "interviewer"
+  }
 
   private
   def exactly_one_place

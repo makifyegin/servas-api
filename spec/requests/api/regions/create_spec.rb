@@ -12,7 +12,6 @@ RSpec.describe "POST /api/countries/:country_id/regions", type: :request do
   context "when the user is a member" do
     before do
       stub_authenticated_user(sub: "member1")
-      create(:role, user_id: "member1", role: "member")
     end
     it "responds 403 Forbidden" do
       post "/api/countries/#{country.id}/regions", headers: headers, params: params
@@ -20,10 +19,10 @@ RSpec.describe "POST /api/countries/:country_id/regions", type: :request do
     end
   end
 
-  context "when the user is an admin" do
+  context "when the user is the national secretary of the country's group" do
     before do
-      stub_authenticated_user(sub: "admin")
-      create(:role, user_id: "admin", role: "admin")
+      stub_authenticated_user(sub: "secretary1")
+      create(:role, user_id: "secretary1", role: "national_secretary", group: country.group)
     end
     it "responds 201 Created with the new region" do
       post "/api/countries/#{country.id}/regions", headers: headers, params: params
@@ -37,6 +36,18 @@ RSpec.describe "POST /api/countries/:country_id/regions", type: :request do
     it "responds 400 Bad Request when the region params are missing" do
       post "/api/countries/#{country.id}/regions", headers: headers
       expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  context "when the user is the national secretary of another group" do
+    before do
+      stub_authenticated_user(sub: "secretary2")
+      create(:role, user_id: "secretary2", role: "national_secretary", group: create(:group, name: "Servas Germany"))
+    end
+    it "responds 403 Forbidden" do
+      post "/api/countries/#{country.id}/regions", headers: headers, params: params
+      expect(response).to have_http_status(:forbidden)
+      expect(Region.find_by(name: "West Midlands")).to be_nil
     end
   end
 end

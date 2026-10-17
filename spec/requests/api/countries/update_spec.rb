@@ -8,10 +8,10 @@ RSpec.describe "PATCH /api/countries/:id", type: :request do
   let(:other_country) { create(:country) }
   let(:headers) { { "Authorization" => "Bearer fake-token" } }
 
-  context "when the user is an admin" do
+  context "when the user is a national secretary" do
     before do
-      stub_authenticated_user(sub: "admin_user")
-      create(:role, user_id: "admin_user", role: "admin")
+      stub_authenticated_user(sub: "secretary1")
+      create(:role, user_id: "secretary1", role: "national_secretary", group: created_country.group)
     end
 
     it "responds 200 OK with the updated country" do
@@ -44,7 +44,6 @@ RSpec.describe "PATCH /api/countries/:id", type: :request do
   context "when the user is a member" do
     before do
       stub_authenticated_user(sub: "member_user")
-      create(:role, user_id: "member_user", role: "member")
     end
     it 'responds 403 when the user is a member' do
       put("/api/countries/#{created_country.id}", headers:, params:)
@@ -55,6 +54,17 @@ RSpec.describe "PATCH /api/countries/:id", type: :request do
     it 'responds 401 when the user no token given' do
       put("/api/countries/#{created_country.id}",  params:)
       expect(response).to have_http_status(:unauthorized)
+    end
+  end
+  context "when the user is the national secretary of another group" do
+    before do
+      stub_authenticated_user(sub: "secretary2")
+      create(:role, user_id: "secretary2", role: "national_secretary", group: create(:group, name: "Servas Germany"))
+    end
+    it "responds 403 Forbidden" do
+      put("/api/countries/#{created_country.id}", headers:, params:)
+      expect(response).to have_http_status(:forbidden)
+      expect(created_country.reload.name).not_to eq("New Country Name")
     end
   end
 end

@@ -35,9 +35,13 @@ module Api
     end
 
     def authorize_admin!
-      return if Role.exists?(user_id: @current_user, role: %w[admin owner])
+      return if Role.exists?(user_id: @current_user, role: "si_admin")
 
       render json: { error: "Forbidden" }, status: :forbidden
+    end
+
+    def national_secretary_of?(group)
+      Role.exists?(user_id: @current_user, role: "national_secretary", group: group)
     end
   end
 end

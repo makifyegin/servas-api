@@ -12,7 +12,6 @@ RSpec.describe "POST /api/countries", type: :request do
   context "when the user is a member" do
     before do
       stub_authenticated_user(sub: "member1")
-      create(:role, user_id: "member1", role: "member")
     end
     it "responds 403 Forbidden" do
       post "/api/countries", params: params, headers: headers
@@ -24,8 +23,8 @@ RSpec.describe "POST /api/countries", type: :request do
     let(:group) { create(:group) }
     let(:params) { { country: { name: "Ireland", group_id: group.id } } }
     before do
-      stub_authenticated_user(sub: "admin1")
-      create(:role, user_id: "admin1", role: "admin")
+      stub_authenticated_user(sub: "national_secretary")
+      create(:role, :si_admin, user_id: "national_secretary")
       create(:country, name: "United Kingdom", group_id: group.id)
     end
     it "responds 201 Created with the new country" do
