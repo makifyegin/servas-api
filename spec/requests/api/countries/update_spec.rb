@@ -39,6 +39,14 @@ RSpec.describe "PATCH /api/countries/:id", type: :request do
       put("/api/countries/#{created_country.id}", headers:)
       expect(response).to have_http_status(:bad_request)
     end
+
+
+    it "does not move the country to another group" do
+      original_group = created_country.group
+      other_group = create(:group, name: "Servas Germany")
+      put("/api/countries/#{created_country.id}", headers:, params: { country: { group_id: other_group.id } })
+      expect(created_country.reload.group).to eq(original_group)
+    end
   end
 
   context "when the user is a member" do
@@ -66,5 +74,6 @@ RSpec.describe "PATCH /api/countries/:id", type: :request do
       expect(response).to have_http_status(:forbidden)
       expect(created_country.reload.name).not_to eq("New Country Name")
     end
+
   end
 end

@@ -23,8 +23,8 @@ RSpec.describe "POST /api/countries", type: :request do
     let(:group) { create(:group) }
     let(:params) { { country: { name: "Ireland", group_id: group.id } } }
     before do
-      stub_authenticated_user(sub: "national_secretary")
-      create(:role, :si_admin, user_id: "national_secretary")
+      stub_authenticated_user(sub: "admin1")
+      create(:role, :si_admin, user_id: "admin1")
       create(:country, name: "United Kingdom", group_id: group.id)
     end
     it "responds 201 Created with the new country" do
@@ -45,6 +45,16 @@ RSpec.describe "POST /api/countries", type: :request do
     it "responds 400 Bad Request when the country params are missing" do
       post "/api/countries", params: {}, headers: headers
       expect(response).to have_http_status(:bad_request)
+    end
+  end
+  context "when the user is a national secretary" do
+    before do
+      stub_authenticated_user(sub: "secretary1")
+      create(:role, user_id: "secretary1", role: "national_secretary")
+    end
+    it "responds 403 Forbidden" do
+      post "/api/countries", params: params, headers: headers
+      expect(response).to have_http_status(:forbidden)
     end
   end
 end

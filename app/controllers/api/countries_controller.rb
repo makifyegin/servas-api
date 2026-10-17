@@ -22,7 +22,7 @@ module Api
     end
 
     def update
-      result = Country::Update.call(country: @country, country_params:)
+      result = Country::Update.call(country: @country, country_params: country_update_params)
 
       if result.success?
         render json: result[:country]
@@ -47,6 +47,9 @@ module Api
       params.require(:country).permit(:name, :group_id)
     end
 
+    def country_update_params
+      params.require(:country).permit(:name)
+    end
     def set_country
       @country = Country.find(params[:id])
     end
