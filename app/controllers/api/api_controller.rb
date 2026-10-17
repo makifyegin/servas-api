@@ -43,5 +43,10 @@ module Api
     def national_secretary_of?(group)
       Role.exists?(user_id: @current_user, role: "national_secretary", group: group)
     end
+
+    def authorize_secretary_of!(group)
+      return if national_secretary_of?(group)
+      render json: { error: "Forbidden" }, status: :forbidden
+    end
   end
 end

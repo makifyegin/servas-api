@@ -74,6 +74,5 @@ RSpec.describe "PATCH /api/countries/:id", type: :request do
       expect(response).to have_http_status(:forbidden)
       expect(created_country.reload.name).not_to eq("New Country Name")
     end
-
   end
 end
