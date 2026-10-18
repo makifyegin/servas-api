@@ -180,7 +180,8 @@ paths:
         example: 1
       responses:
         '200':
-          description: responds 200 OK with all regions
+          description: responds 200 OK with only this country's regions when the user
+            is signed in
           content:
             application/json:
               schema:
@@ -357,7 +358,8 @@ paths:
         example: 1
       responses:
         '204':
-          description: responds 204 No Content and deletes the region
+          description: responds 204 No Content when the user is the national secretary
+            of the country's group
         '401':
           description: responds 401 Unauthorized when no token is given
           content:
@@ -372,7 +374,8 @@ paths:
               example:
                 error: Unauthorized
         '403':
-          description: responds 403 Forbidden
+          description: responds 403 Forbidden when the user is the national secretary
+            of another group
           content:
             application/json:
               schema:
