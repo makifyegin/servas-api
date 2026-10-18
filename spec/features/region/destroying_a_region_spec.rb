@@ -51,6 +51,5 @@ RSpec.describe "Deleting a region", type: :request do
       delete "/api/countries/#{country.id}/regions/#{region.id}", headers: headers
       expect(response).to have_http_status(:forbidden)
       expect(Region.find_by(id: region.id)).to_not be_nil
-
   end
 end

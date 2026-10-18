@@ -13,7 +13,8 @@ paths:
       - Api::Country
       responses:
         '200':
-          description: responds 200 OK with all countries
+          description: responds 200 OK with all countries when the user is signed
+            in
           content:
             application/json:
               schema:
@@ -43,6 +44,11 @@ paths:
                 created_at: '2026-01-01T12:00:00.000Z'
                 updated_at: '2026-01-01T12:00:00.000Z'
                 group_id: 2
+              - id: 2
+                name: United Kingdom
+                created_at: '2026-01-01T12:00:00.000Z'
+                updated_at: '2026-01-01T12:00:00.000Z'
+                group_id: 2
         '401':
           description: responds 401 Unauthorized when no token is given
           content:
@@ -62,7 +68,8 @@ paths:
       - Api::Country
       responses:
         '201':
-          description: responds 201 Created with the new country
+          description: responds 201 Created with the new country when the user is
+            an SI admin
           content:
             application/json:
               schema:
@@ -85,7 +92,7 @@ paths:
                 - updated_at
                 - group_id
               example:
-                id: 2
+                id: 1
                 name: Ireland
                 created_at: '2026-01-01T12:00:00.000Z'
                 updated_at: '2026-01-01T12:00:00.000Z'
@@ -117,7 +124,7 @@ paths:
               example:
                 error: Unauthorized
         '403':
-          description: responds 403 Forbidden
+          description: responds 403 Forbidden when the user is a national secretary
           content:
             application/json:
               schema:
@@ -433,7 +440,7 @@ paths:
         example: 1
       responses:
         '200':
-          description: responds 200 OK when the region exists
+          description: responds 200 OK when the user is signed in
           content:
             application/json:
               schema:
@@ -462,7 +469,7 @@ paths:
                 created_at: '2026-01-01T12:00:00.000Z'
                 updated_at: '2026-01-01T12:00:00.000Z'
         '401':
-          description: Responds 401 Unauthorized when no token is given
+          description: responds 401 Unauthorized when no token is given
           content:
             application/json:
               schema:
@@ -632,10 +639,11 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+        example: 0
       responses:
         '204':
-          description: responds 204 No Content and deletes the country
+          description: responds 204 No Content when the user is the national secretary
+            of the country's group
         '401':
           description: responds 401 Unauthorized when no token is given
           content:
@@ -650,7 +658,8 @@ paths:
               example:
                 error: Unauthorized
         '403':
-          description: responds 403 Forbidden
+          description: responds 403 Forbidden when the user is the national secretary
+            of another group
           content:
             application/json:
               schema:
@@ -698,10 +707,10 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+        example: 0
       responses:
         '200':
-          description: responds 200 OK when the country exists
+          description: responds 200 OK when the user is signed in
           content:
             application/json:
               schema:
@@ -730,7 +739,7 @@ paths:
                 updated_at: '2026-01-01T12:00:00.000Z'
                 group_id: 2
         '401':
-          description: Responds 401 Unauthorized when no token is given
+          description: responds 401 Unauthorized when no token is given
           content:
             application/json:
               schema:
@@ -754,7 +763,7 @@ paths:
                 required:
                 - error
               example:
-                error: Couldn't find Country with 'id'="99"
+                error: Couldn't find Country with 'id'="0"
     put:
       summary: update
       tags:
@@ -765,29 +774,11 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                country:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    group_id:
-                      type: string
-              required:
-              - country
-            example:
-              country:
-                name: New Country Name
-                group_id: '3'
+        example: 0
       responses:
         '200':
-          description: does not move the country to another group
+          description: responds 200 OK with the updated country when the user is the
+            national secretary of the country's group
           content:
             application/json:
               schema:
@@ -795,26 +786,26 @@ paths:
                 properties:
                   name:
                     type: string
+                  group_id:
+                    type: integer
                   id:
                     type: integer
                   created_at:
                     type: string
                   updated_at:
                     type: string
-                  group_id:
-                    type: integer
                 required:
-                - group_id
                 - name
+                - group_id
                 - id
                 - created_at
                 - updated_at
               example:
-                name: United Kingdom
+                name: New Country Name
+                group_id: 2
                 id: 1
                 created_at: '2026-01-01T12:00:00.000Z'
                 updated_at: '2026-01-01T12:00:00.000Z'
-                group_id: 2
         '400':
           description: responds 400 Bad Request when the country params are missing
           content:
@@ -829,7 +820,7 @@ paths:
               example:
                 error: 'param is missing or the value is empty or invalid: country'
         '401':
-          description: responds 401 when the user no token given
+          description: responds 401 Unauthorized when no token is given
           content:
             application/json:
               schema:
@@ -842,7 +833,8 @@ paths:
               example:
                 error: Unauthorized
         '403':
-          description: responds 403 Forbidden
+          description: responds 403 Forbidden when the user is the national secretary
+            of another group
           content:
             application/json:
               schema:
@@ -868,7 +860,8 @@ paths:
               example:
                 error: Couldn't find Country with 'id'="0"
         '422':
-          description: responds 422 Unprocessable Content when the name already taken
+          description: responds 422 Unprocessable Content when the name is already
+            taken
           content:
             application/json:
               schema:
@@ -881,6 +874,24 @@ paths:
               example:
                 error: 'Error updating country: Validation failed: Name has already
                   been taken'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                country:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                  required:
+                  - name
+              required:
+              - country
+            example:
+              country:
+                name: New Country Name
 components:
   securitySchemes:
     bearer_auth:
