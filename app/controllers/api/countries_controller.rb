@@ -2,7 +2,6 @@ module Api
   class CountriesController < Api::ApiController
     before_action :authorize_admin!, only: %i[create]
     before_action :set_country, only: %i[show update destroy]
-    before_action -> { authorize_secretary_of!(@country.group) }, only: %i[update destroy]
   def index
     @countries = Country.all
     render json: @countries
@@ -22,6 +21,7 @@ module Api
     end
 
     def update
+      authorize! :update, @country
       result = Country::Update.call(country: @country, country_params: country_update_params)
 
       if result.success?
@@ -32,6 +32,7 @@ module Api
     end
 
     def destroy
+      authorize! :destroy, @country
       result = Country::Delete.call(country_id: params[:id])
 
       if result.success?

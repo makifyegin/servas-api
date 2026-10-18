@@ -3,7 +3,6 @@
 module Api
 class RegionsController < Api::ApiController
   before_action :set_country
-  before_action -> { authorize_secretary_of!(@country.group) }, only: %i[create update destroy]
   before_action :set_region, only: %i[show update destroy]
   def index
     @regions = @country.regions
@@ -16,6 +15,7 @@ class RegionsController < Api::ApiController
 
 
   def create
+    authorize! :create, Region.new(country: @country)
     result = Region::Create.call(country: @country, region_params: region_params)
     if result.success?
       render json: result[:region], status: :created
@@ -26,6 +26,7 @@ class RegionsController < Api::ApiController
   end
 
   def update
+    authorize! :update, @region
     result = Region::Update.call(region: @region, region_params:)
     if result.success?
       render json: result[:region]
@@ -35,6 +36,7 @@ class RegionsController < Api::ApiController
   end
 
   def destroy
+    authorize! :destroy, @region
     result = Region::Delete.call(country: @country, region_id: params[:id])
     if result.success?
       head :no_content
