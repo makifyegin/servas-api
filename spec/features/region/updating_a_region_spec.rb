@@ -1,31 +1,25 @@
 require "rails_helper"
 
-RSpec.describe "PUT /api/countries/:country_id/regions/:id", type: :request do
+RSpec.describe "Updating a region", type: :request do
   let(:country) { create(:country) }
   let(:region) { create(:region, name: "West Midlands", country:) }
   let(:params) { { region: { name: "Yorkshire" } } }
   let(:headers) { { "Authorization" => "Bearer fake-token" } }
+  before do
+    stub_authenticated_user(sub: "secretary1")
+    create(:role, user_id: "secretary1", role: "national_secretary", group: country.group)
+  end
   it "responds 401 Unauthorized when no token is given" do
     put "/api/countries/#{country.id}/regions/#{region.id}", params: params
     expect(response).to have_http_status(:unauthorized)
   end
 
-  context "when the user is a member" do
-    before do
+    it "responds 403 Forbidden when the user is an ordinary member" do
       stub_authenticated_user(sub: "member1")
-    end
-    it "responds 403 Forbidden" do
       put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers, params: params
       expect(response).to have_http_status(:forbidden)
     end
-  end
-
-  context "when the user is the national secretary of the country's group" do
-    before do
-      stub_authenticated_user(sub: "secretary1")
-      create(:role, user_id: "secretary1", role: "national_secretary", group: country.group)
-    end
-    it "responds 200 OK with the new region" do
+    it "responds 200 OK when the user is the national secretary of the country's group" do
       put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers, params: params
       expect(response).to have_http_status(:ok)
       expect(Region.find_by(name: "Yorkshire")).to_not be_nil
@@ -38,7 +32,7 @@ RSpec.describe "PUT /api/countries/:country_id/regions/:id", type: :request do
       put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers
       expect(response).to have_http_status(:bad_request)
     end
-    it "responds 404 NOT FOUND when the region not exist" do
+    it "responds 404 Not Found when the region does not exist" do
       put "/api/countries/#{country.id}/regions/0", headers: headers, params: params
       expect(response).to have_http_status(:not_found)
     end
@@ -47,17 +41,10 @@ RSpec.describe "PUT /api/countries/:country_id/regions/:id", type: :request do
       put "/api/countries/#{other_country.id}/regions/#{region.id}", headers: headers
       expect(response).to have_http_status(:not_found)
     end
-  end
-
-  context "when the user is the national secretary of another group" do
-    before do
-      stub_authenticated_user(sub: "secretary2")
+  it "responds 403 Forbidden when the user is the national secretary of another group" do      stub_authenticated_user(sub: "secretary2")
       create(:role, user_id: "secretary2", role: "national_secretary", group: create(:group, name: "Servas Germany"))
-    end
-    it "responds 403 Forbidden" do
       put "/api/countries/#{country.id}/regions/#{region.id}", headers: headers, params: params
       expect(response).to have_http_status(:forbidden)
       expect(region.reload.name).to eq("West Midlands")
     end
-  end
 end

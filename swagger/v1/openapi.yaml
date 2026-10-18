@@ -504,7 +504,8 @@ paths:
         example: 1
       responses:
         '200':
-          description: responds 200 OK with the new region
+          description: responds 200 OK when the user is the national secretary of
+            the country's group
           content:
             application/json:
               schema:
@@ -559,7 +560,8 @@ paths:
               example:
                 error: Unauthorized
         '403':
-          description: responds 403 Forbidden
+          description: responds 403 Forbidden when the user is the national secretary
+            of another group
           content:
             application/json:
               schema:
