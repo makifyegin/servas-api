@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "PATCH /api/countries/:id", type: :request do
-  let(:created_country) { create(:country) }
+  let(:created_country) { create(:country, name: "United Kingdom") }
   let(:params) do
     { country: { name: 'New Country Name' } }
   end
