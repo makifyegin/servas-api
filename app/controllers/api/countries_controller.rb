@@ -1,6 +1,5 @@
 module Api
   class CountriesController < Api::ApiController
-    before_action :authorize_admin!, only: %i[create]
     before_action :set_country, only: %i[show update destroy]
   def index
     @countries = Country.all
@@ -12,6 +11,7 @@ module Api
   end
 
     def create
+      authorize! :create, Country
       result = Country::Create.call(country_params: country_params)
       if result.success?
         render json: result[:country], status: :created        # take the country out of the box

@@ -37,11 +37,6 @@ module Api
       render json: { error: "Unauthorized" }, status: :unauthorized
     end
 
-    def authorize_admin!
-      return if Role.exists?(user_id: @current_user, role: "si_admin")
-
-      render json: { error: "Forbidden" }, status: :forbidden
-    end
 
     def current_ability
       @current_ability ||= Ability.new(@current_user)

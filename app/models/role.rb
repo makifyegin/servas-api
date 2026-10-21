@@ -2,7 +2,7 @@ class Role < ApplicationRecord
   belongs_to :group, optional: true
   belongs_to :region, optional: true
   validate :exactly_one_place
-
+  validates :role, uniqueness: { scope: %i[user_id group_id region_id] }
   enum :role, {
     si_admin: "si_admin",
     national_secretary: "national_secretary",

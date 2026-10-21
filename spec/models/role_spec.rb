@@ -19,4 +19,11 @@ RSpec.describe Role, type: :model do
     role = build(:role, group_id: nil, region_id: nil)
     expect(role).not_to be_valid
   end
+  it "is not valid when the same person has the same role in the same place" do
+    group = create(:group)
+    create(:role, user_id: "jane", role: "national_secretary", group:)
+    duplicate = build(:role, user_id: "jane", role: "national_secretary", group:)
+
+    expect(duplicate).not_to be_valid
+  end
 end
