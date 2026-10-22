@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_17_215357) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_22_223755) do
   create_table "countries", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -28,11 +28,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_17_215357) do
   end
 
   create_table "members", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "hydra_sub", null: false
-    t.integer "region_id", null: false
+    t.integer "region_id"
+    t.string "status", default: "amiko", null: false
     t.index ["hydra_sub"], name: "index_members_on_hydra_sub", unique: true
     t.index ["region_id"], name: "index_members_on_region_id"
   end
