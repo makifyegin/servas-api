@@ -20,4 +20,14 @@ RSpec.describe Group, type: :model do
     servas_britain_group = create(:group, name: "Servas Britain", parent_id: servas_international.id)
     expect(servas_international.children).to include(servas_britain_group)
   end
+  it "has the regions of its countries" do
+    group = create(:group)
+    uk = create(:country, name: "United Kingdom", group:)
+    ireland = create(:country, name: "Ireland", group:)
+    west_midlands = create(:region, country: uk)
+    dublin = create(:region, country: ireland)
+
+    expect(group.regions).to contain_exactly(west_midlands, dublin)
+  end
+
 end
