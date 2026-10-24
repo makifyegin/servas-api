@@ -68,4 +68,11 @@ RSpec.describe Ability, type: :model do
       it { is_expected.not_to be_able_to(:create, Role.new(role: "interviewer", region: )) }
     end
   end
+
+  describe "Member" do
+    context "with a user who has no role" do
+      it { is_expected.to be_able_to(:create, Member) }
+    end
+
+    end
 end
