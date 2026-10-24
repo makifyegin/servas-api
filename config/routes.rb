@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       resources :regions
     end
     resources :members, only: %i[create]
+    resource  :me, only: %i[show], controller: "members"   # singular: just MINE, no id
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

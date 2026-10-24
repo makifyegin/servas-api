@@ -9,5 +9,10 @@ module Api
         render json: { error: result[:error] }, status: :unprocessable_content
       end
     end
+
+    def show
+      member = Member.find_by!(hydra_sub: @current_user)
+      render json: member, status: :ok
+    end
   end
 end
