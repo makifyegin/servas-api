@@ -29,5 +29,4 @@ RSpec.describe Group, type: :model do
 
     expect(group.regions).to contain_exactly(west_midlands, dublin)
   end
-
 end

@@ -25,7 +25,6 @@ RSpec.describe Ability, type: :model do
     end
 
     context "with a user who has no role" do
-
       it { is_expected.not_to be_able_to(:update, country) }
       it { is_expected.not_to be_able_to(:create, Country) }
     end
@@ -34,7 +33,6 @@ RSpec.describe Ability, type: :model do
 
       it { is_expected.to be_able_to(:create, Country) }
     end
-
   end
   describe "Region" do
     let(:country) { create(:country) }
@@ -42,7 +40,7 @@ RSpec.describe Ability, type: :model do
 
     context "with a national secretary of the country's group" do
       before { create(:role, user_id: "national_secretary", group: country.group) }
-      it {is_expected.to be_able_to(:create, region) }
+      it { is_expected.to be_able_to(:create, region) }
     end
     context "with a national secretary of another group" do
       let(:group) { create(:group) }
@@ -57,15 +55,14 @@ RSpec.describe Ability, type: :model do
     context "with a national secretary of the country's group" do
       before { create(:role, user_id: "national_secretary", group: country.group) }
 
-      it { is_expected.to be_able_to(:create, Role.new(role: "interviewer", region:))}
+      it { is_expected.to be_able_to(:create, Role.new(role: "interviewer", region:)) }
       it { is_expected.not_to be_able_to(:create, Role.new(role: "si_admin", region:)) }
-
     end
 
     context "with a national secretary of another group" do
       before { create(:role, user_id:, group: create(:group, name: "Servas Germany")) }
 
-      it { is_expected.not_to be_able_to(:create, Role.new(role: "interviewer", region: )) }
+      it { is_expected.not_to be_able_to(:create, Role.new(role: "interviewer", region:)) }
     end
   end
 
@@ -73,6 +70,5 @@ RSpec.describe Ability, type: :model do
     context "with a user who has no role" do
       it { is_expected.to be_able_to(:create, Member) }
     end
-
     end
 end
