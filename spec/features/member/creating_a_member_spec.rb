@@ -2,7 +2,8 @@ require "rails_helper"
 
 RSpec.describe "Creating a member", type: :request do
   let(:headers) { { "Authorization" => "Bearer fake-token" } }
-  before { stub_authenticated_user(sub: "new_user") }
+
+  before { stub_authenticated_user(sub: "amiko_user_exist") }
   it "responds 401 Unauthorized when no token is given" do
     post "/api/members"
     expect(response).to have_http_status(:unauthorized)
@@ -12,4 +13,10 @@ RSpec.describe "Creating a member", type: :request do
       expect(response).to have_http_status(:created)
       expect(response.parsed_body["status"]).to eq("amiko")
     end
+  it "responds 200 OK with the existing member when the user already has one" do
+    create(:member, hydra_sub: "amiko_user_exist")
+    post "/api/members", headers: headers
+    expect(response).to have_http_status(:ok)
+    expect(Member.count).to eq(1)        # still only one row?
+  end
 end

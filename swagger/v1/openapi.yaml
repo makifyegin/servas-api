@@ -892,6 +892,102 @@ paths:
             example:
               country:
                 name: New Country Name
+  "/api/members":
+    post:
+      summary: create
+      tags:
+      - Api::Member
+      responses:
+        '200':
+          description: responds 200 OK with the existing member when the user already
+            has one
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hydra_sub:
+                    type: string
+                  status:
+                    type: string
+                  id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  region_id:
+                    type:
+                    - integer
+                    - 'null'
+                required:
+                - hydra_sub
+                - status
+                - id
+                - created_at
+                - updated_at
+                - region_id
+              example:
+                hydra_sub: amiko_user_exist
+                status: amiko
+                id: 1
+                created_at: '2026-01-01T12:00:00.000Z'
+                updated_at: '2026-01-01T12:00:00.000Z'
+                region_id:
+        '201':
+          description: responds 201 Created with an amiko member when the user is
+            signed in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  hydra_sub:
+                    type: string
+                  region_id:
+                    type: 'null'
+                  status:
+                    type: string
+                required:
+                - id
+                - created_at
+                - updated_at
+                - hydra_sub
+                - region_id
+                - status
+              example:
+                id: 1
+                created_at: '2026-01-01T12:00:00.000Z'
+                updated_at: '2026-01-01T12:00:00.000Z'
+                hydra_sub: amiko_user_exist
+                region_id:
+                status: amiko
+        '401':
+          description: responds 401 Unauthorized when no token is given
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Unauthorized
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties: {}
+            example: {}
 components:
   securitySchemes:
     bearer_auth:

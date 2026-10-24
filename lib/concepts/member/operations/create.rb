@@ -17,7 +17,7 @@ class Member
       private
 
       def create_member(member_params:)
-        Member.new(member_params)
+        Member.find_or_initialize_by(member_params)
       end
     end
   end
