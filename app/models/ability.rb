@@ -10,5 +10,6 @@ class Ability
     end
     can(:create, Country) if Role.exists?(user_id: user_id, role: "si_admin")
     can(%i[create], Member)
+    can(:create, MembershipApplication, member: { hydra_sub: user_id, status: "amiko" })
   end
 end

@@ -1,16 +1,16 @@
-# Be sure to restart your server when you modify this file.
+# frozen_string_literal: true
 
-# Avoid CORS issues when API is called from the frontend app.
-# Handle Cross-Origin Resource Sharing (CORS) in order to accept cross-origin Ajax requests.
+# Which websites may call this API from a browser (CORS). Like editor-api:
+# - development/test: any localhost address
+# - production: only the addresses in ENV["ALLOWED_ORIGINS"] (comma-separated)
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins(%r{https?://([a-z0-9-]+\.)?localhost([:0-9]*)$}) if Rails.env.development? || Rails.env.test?
+    resource "/api/*", headers: :any, methods: %i[get post patch put delete]
+  end
 
-# Read more: https://github.com/cyu/rack-cors
-
-# Rails.application.config.middleware.insert_before 0, Rack::Cors do
-#   allow do
-#     origins "example.com"
-#
-#     resource "*",
-#       headers: :any,
-#       methods: [:get, :post, :put, :patch, :delete, :options, :head]
-#   end
-# end
+  allow do
+    origins(*ENV.fetch("ALLOWED_ORIGINS", "").split(",").map(&:strip).reject(&:empty?))
+    resource "/api/*", headers: :any, methods: %i[get post patch put delete]
+  end
+end

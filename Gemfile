@@ -67,3 +67,5 @@ gem "simplecov", "~> 1.3", group: :test
 gem "rspec-openapi", "~> 0.34.0", group: :test
 
 gem "cancancan", "~> 3.7"
+
+gem "rack-cors", "~> 3.0"

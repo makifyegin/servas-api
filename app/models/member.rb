@@ -1,14 +1,10 @@
 class Member < ApplicationRecord
   belongs_to :region, optional: true
+  has_many :membership_applications
 
   enum :status, {
     amiko: "amiko",
-    applied: "applied",
-    interview_booked: "interview_booked",
-    payment_pending: "payment_pending",
-    consent_pending: "consent_pending",
-    approved: "approved",
-    rejected: "rejected"
+    member: "member"
   }
 
   validates :hydra_sub, presence: true, uniqueness: true

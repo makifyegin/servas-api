@@ -14,8 +14,8 @@ RSpec.describe Member, type: :model do
     expect(member).to be_valid
   end
 
-  it "is not valid without a region when the status is applied" do
-    member = build(:member, status: "applied", region: nil)
+  it "is not valid without a region when the status is member" do
+    member = build(:member, status: "member", region: nil)
     expect(member).not_to be_valid
   end
   it "is not valid without hydra_sub" do

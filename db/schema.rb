@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_22_223755) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_225141) do
   create_table "countries", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -37,6 +37,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_223755) do
     t.index ["region_id"], name: "index_members_on_region_id"
   end
 
+  create_table "membership_applications", force: :cascade do |t|
+    t.integer "member_id", null: false
+    t.integer "region_id", null: false
+    t.string "status", default: "applied", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id"], name: "index_membership_applications_on_member_id"
+    t.index ["region_id"], name: "index_membership_applications_on_region_id"
+  end
+
   create_table "regions", force: :cascade do |t|
     t.string "name"
     t.integer "country_id", null: false
@@ -60,6 +70,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_223755) do
   add_foreign_key "countries", "groups"
   add_foreign_key "groups", "groups", column: "parent_id"
   add_foreign_key "members", "regions"
+  add_foreign_key "membership_applications", "members"
+  add_foreign_key "membership_applications", "regions"
   add_foreign_key "regions", "countries"
   add_foreign_key "roles", "groups"
   add_foreign_key "roles", "regions"
