@@ -5,7 +5,10 @@ require "rails_helper"
 RSpec.describe "Deleting my member data", type: :request do
   let(:headers) { { "Authorization" => "Bearer fake-token" } }
 
-  before { stub_authenticated_user(sub: "akif") }
+  before do
+    stub_authenticated_user(sub: "akif")
+    stub_login_deletion
+  end
 
   it "responds 401 Unauthorized when no token is given" do
     delete "/api/me"
@@ -23,6 +26,14 @@ RSpec.describe "Deleting my member data", type: :request do
 
     expect(response).to have_http_status(:no_content)
     expect(Member.find_by(id: member.id)).to be_nil
+  end
+
+  it "revokes my Hydra sessions and deletes my Kratos identity" do
+    create(:member, hydra_sub: "akif")
+    delete("/api/me", headers:)
+
+    expect(HydraAdminApiClient).to have_received(:revoke_sessions).with(subject: "akif")
+    expect(KratosAdminApiClient).to have_received(:delete_identity).with(id: "akif")
   end
 
   it "deletes the member's membership applications too" do
