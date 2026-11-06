@@ -892,6 +892,53 @@ paths:
               country:
                 name: New Country Name
   "/api/me":
+    delete:
+      summary: destroy
+      tags:
+      - Api::Member
+      responses:
+        '204':
+          description: does not delete another member
+        '401':
+          description: responds 401 Unauthorized when no token is given
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Unauthorized
+        '404':
+          description: responds 404 Not Found when the user has not joined yet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Couldn't find Member with [WHERE "members"."hydra_sub" = ?]
+        '422':
+          description: responds 422 Unprocessable Content when the member cannot be
+            deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Error deleting member
     get:
       summary: show
       tags:

@@ -70,6 +70,18 @@ RSpec.describe Ability, type: :model do
     context "with a user who has no role" do
       it { is_expected.to be_able_to(:create, Member) }
     end
+
+    context "with my own member record" do
+      let(:me) { create(:member, hydra_sub: user_id) }
+
+      it { is_expected.to be_able_to(:destroy, me) }
+    end
+
+    context "with someone else's member record" do
+      let(:someone_else) { create(:member, hydra_sub: "someone_else") }
+
+      it { is_expected.not_to be_able_to(:destroy, someone_else) }
+    end
   end
 
 
