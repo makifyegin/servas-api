@@ -325,8 +325,7 @@ paths:
                 required:
                 - error
               example:
-                error: 'Error creating new region: Validation failed: Name can''t
-                  be blank'
+                error: 'Validation failed: Name can''t be blank'
       requestBody:
         content:
           application/x-www-form-urlencoded:

@@ -11,7 +11,6 @@ class Region
     rescue ActiveRecord::RecordNotDestroyed => e
       response[:error] = "Error deleting region: #{e}"
       response
-
     end
 
 
