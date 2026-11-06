@@ -7,8 +7,7 @@ class Country
         response = OperationResponse.new
         delete_country(country_id)
         response
-
-      rescue ActiveRecord::RgiecordNotDestroyed => e
+      rescue ActiveRecord::RecordNotDestroyed => e
         response[:error] = "Error deleting country: #{e}"
         response
       end
