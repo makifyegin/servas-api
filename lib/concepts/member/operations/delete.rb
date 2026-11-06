@@ -7,11 +7,10 @@ class Member
         response = OperationResponse.new
         delete_member(member_id)
         response
-      rescue ActiveRecord::RecordNotFound => e
+      rescue ActiveRecord::RecordNotDestroyed => e
         response[:error] = "Error deleting member: #{e}"
         response
       end
-
       private
 
       def delete_member(member_id)

@@ -11,11 +11,6 @@ class Region
       rescue ActiveRecord::RecordInvalid => invalid
         response[:error] = invalid.message
         response
-      rescue StandardError => e
-        Rails.error.report(e)
-        Sentry.capture_exception(e)
-        response[:error] = "Error creating new region: #{e.message}"
-        response
       end
 
       private

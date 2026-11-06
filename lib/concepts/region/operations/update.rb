@@ -9,8 +9,7 @@ class Region
         response[:region].assign_attributes(region_params)
         response[:region].save!
         response
-      rescue StandardError => e
-        Sentry.capture_exception(e)
+      rescue ActiveRecord::RecordInvalid => e
         response[:error] = "Error updating region: #{e}"
         response
       end

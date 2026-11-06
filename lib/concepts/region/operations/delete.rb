@@ -8,10 +8,10 @@ class Region
       response = OperationResponse.new
       delete_region(country, region_id)
       response
-    rescue StandardError => e
-      Sentry.capture_exception(e)
-      response[:error] = "Error deleting region: #{e.message}"
+    rescue ActiveRecord::RecordNotDestroyed => e
+      response[:error] = "Error deleting region: #{e}"
       response
+
     end
 
 
