@@ -4,7 +4,7 @@ Sentry.init do |config|
   config.environment = Rails.env
   # Add data like request headers and IP for users,
   # see https://docs.sentry.io/platforms/ruby/data-management/data-collected/ for more info
-  config.send_default_pii = true
+  config.send_default_pii = Rails.env.development?
 
   # Enable sending logs to Sentry
   # config.enable_logs = true
