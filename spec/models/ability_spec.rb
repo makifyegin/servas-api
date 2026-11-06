@@ -103,5 +103,31 @@ RSpec.describe Ability, type: :model do
 
       it { is_expected.not_to be_able_to(:create, MembershipApplication.new(member: someone_else)) }
     end
+
+    context "with my own open application" do
+      let(:me) { create(:member, hydra_sub: user_id) }
+
+      MembershipApplication::OPEN_STATUSES.each do |status|
+        it "can cancel it when it is #{status}" do
+          expect(ability).to be_able_to(:cancel, build(:membership_application, member: me, status:))
+        end
+      end
+    end
+
+    context "with my own closed application" do
+      let(:me) { create(:member, hydra_sub: user_id) }
+
+      %w[approved rejected canceled].each do |status|
+        it "cannot cancel it when it is #{status}" do
+          expect(ability).not_to be_able_to(:cancel, build(:membership_application, member: me, status:))
+        end
+      end
+    end
+
+    context "with someone else's open application" do
+      let(:someone_else) { create(:member, hydra_sub: "someone_else") }
+
+      it { is_expected.not_to be_able_to(:cancel, build(:membership_application, member: someone_else)) }
+    end
   end
 end
