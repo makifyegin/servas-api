@@ -9,8 +9,7 @@ class Country
         response[:country].assign_attributes(country_params)
         response[:country].save!
         response
-      rescue StandardError => e
-        Sentry.capture_exception(e)
+      rescue ActiveRecord::RecordInvalid => e
         response[:error] = "Error updating country: #{e}"
         response
       end

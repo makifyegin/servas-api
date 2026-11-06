@@ -70,5 +70,26 @@ RSpec.describe Ability, type: :model do
     context "with a user who has no role" do
       it { is_expected.to be_able_to(:create, Member) }
     end
+  end
+
+
+  describe "MembershipApplication" do
+    context "with an amiko applying for themselves" do
+      let(:me) { create(:member, hydra_sub: user_id) }
+
+      it { is_expected.to be_able_to(:create, MembershipApplication.new(member: me)) }
     end
+
+    context "with an approved member" do
+      let(:me) { create(:member, hydra_sub: user_id, status: "member", region: create(:region)) }
+
+      it { is_expected.not_to be_able_to(:create, MembershipApplication.new(member: me)) }
+    end
+
+    context "with someone else's member record" do
+      let(:someone_else) { create(:member, hydra_sub: "someone_else") }
+
+      it { is_expected.not_to be_able_to(:create, MembershipApplication.new(member: someone_else)) }
+    end
+  end
 end

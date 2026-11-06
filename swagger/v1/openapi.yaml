@@ -892,6 +892,190 @@ paths:
             example:
               country:
                 name: New Country Name
+  "/api/me":
+    get:
+      summary: show
+      tags:
+      - Api::Member
+      responses:
+        '200':
+          description: responds 200 OK when the user is signed in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  hydra_sub:
+                    type: string
+                  region_id:
+                    type: 'null'
+                  status:
+                    type: string
+                required:
+                - id
+                - created_at
+                - updated_at
+                - hydra_sub
+                - region_id
+                - status
+              example:
+                id: 1
+                created_at: '2026-01-01T12:00:00.000Z'
+                updated_at: '2026-01-01T12:00:00.000Z'
+                hydra_sub: akif
+                region_id:
+                status: amiko
+        '401':
+          description: responds 401 Unauthorized when no token is given
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Unauthorized
+        '404':
+          description: responds 404 Not Found when the member does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Couldn't find Member with [WHERE "members"."hydra_sub" = ?]
+  "/api/me/membership_application":
+    post:
+      summary: create
+      tags:
+      - Api::MembershipApplication
+      responses:
+        '201':
+          description: responds 201 Created with an applied membership application
+            when the user is an amiko
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  member_id:
+                    type: integer
+                  region_id:
+                    type: integer
+                  status:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                required:
+                - id
+                - member_id
+                - region_id
+                - status
+                - created_at
+                - updated_at
+              example:
+                id: 1
+                member_id: 1
+                region_id: 1
+                status: applied
+                created_at: '2026-01-01T12:00:00.000Z'
+                updated_at: '2026-01-01T12:00:00.000Z'
+        '400':
+          description: responds 400 Bad Request when the region is missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: 'param is missing or the value is empty or invalid: region_id'
+        '401':
+          description: responds 401 Unauthorized when no token is given
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Unauthorized
+        '403':
+          description: responds 403 Forbidden when the user is already a member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Forbidden
+        '404':
+          description: responds 404 Not Found when the user has not joined yet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Couldn't find Member with [WHERE "members"."hydra_sub" = ?]
+        '422':
+          description: responds 422 Unprocessable Content when the region does not
+            exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: 'Error creating membership application: Validation failed:
+                  Region must exist'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                region_id:
+                  type: string
+              required:
+              - region_id
+            example:
+              region_id: '1'
   "/api/members":
     post:
       summary: create

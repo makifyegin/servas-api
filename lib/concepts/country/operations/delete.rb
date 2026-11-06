@@ -7,8 +7,8 @@ class Country
         response = OperationResponse.new
         delete_country(country_id)
         response
-      rescue StandardError => e
-        Sentry.capture_exception(e)
+
+      rescue ActiveRecord::RgiecordNotDestroyed => e
         response[:error] = "Error deleting country: #{e}"
         response
       end

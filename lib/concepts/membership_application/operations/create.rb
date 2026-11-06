@@ -8,8 +8,7 @@ class MembershipApplication
         response[:membership_application] = build_membership_application(member:, region_id:)
         response[:membership_application].save!
         response
-      rescue StandardError => e
-        Sentry.capture_exception(e)
+      rescue ActiveRecord::RecordInvalid => e
         response[:error] = "Error creating membership application: #{e}"
         response
       end

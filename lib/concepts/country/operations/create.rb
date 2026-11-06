@@ -8,8 +8,7 @@ class Country
         response[:country] = create_country(country_params:)
         response[:country].save!
         response
-      rescue StandardError => e
-        Sentry.capture_exception(e)
+      rescue ActiveRecord::RecordInvalid => e
         response[:error] = "Error creating country: #{e}"
         response
       end

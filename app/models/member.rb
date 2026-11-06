@@ -1,6 +1,6 @@
 class Member < ApplicationRecord
   belongs_to :region, optional: true
-  has_many :membership_applications
+  has_many :membership_applications, dependent: :destroy
 
   enum :status, {
     amiko: "amiko",

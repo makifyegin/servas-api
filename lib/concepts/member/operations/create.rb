@@ -8,9 +8,8 @@ class Member
         response[:member] = create_member(member_params:)
         response[:member].save!
         response
-      rescue StandardError => e
-        Sentry.capture_exception(e)
-        response[:error] = "Error creating member: #{e}"
+      rescue ActiveRecord::RecordInvalid => e
+        response[:error] = "Error creating country: #{e}"
         response
       end
 

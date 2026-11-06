@@ -7,8 +7,7 @@ class Member
         response = OperationResponse.new
         delete_member(member_id)
         response
-      rescue StandardError => e
-        Sentry.capture_exception(e)
+      rescue ActiveRecord::RecordNotFound => e
         response[:error] = "Error deleting member: #{e}"
         response
       end

@@ -69,3 +69,5 @@ gem "rspec-openapi", "~> 0.34.0", group: :test
 gem "cancancan", "~> 3.7"
 
 gem "rack-cors", "~> 3.0"
+
+gem "dotenv-rails", "~> 3.2", groups: [:development, :test]
