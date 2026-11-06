@@ -32,6 +32,16 @@ RSpec.describe Member::Delete do
     expect(KratosAdminApiClient).to have_received(:delete_identity).with(id: member.hydra_sub)
   end
 
+  it "returns an error and leaves Hydra and Kratos alone when the member cannot be deleted" do
+    allow_any_instance_of(Member).to receive(:destroy!).and_raise(ActiveRecord::RecordNotDestroyed, "cannot delete")
+
+    response = Member::Delete.call(member_id: member.id)
+    expect(response).to be_failure
+    expect(response[:error]).to eq("Error deleting member: cannot delete")
+    expect(HydraAdminApiClient).not_to have_received(:revoke_sessions)
+    expect(KratosAdminApiClient).not_to have_received(:delete_identity)
+  end
+
   it "keeps the member and does not touch Kratos when Hydra fails" do
     allow(HydraAdminApiClient).to receive(:revoke_sessions).and_raise(Faraday::ServerError)
 
