@@ -9,7 +9,7 @@ class Member
         response[:member].save!
         response
       rescue ActiveRecord::RecordInvalid => e
-        response[:error] = "Error creating country: #{e}"
+        response[:error] = "Error creating member: #{e}"
         response
       end
 
