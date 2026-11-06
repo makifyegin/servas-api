@@ -72,3 +72,5 @@ jobs:
 
       - name: Check API docs are up to date
         run: git diff --exit-code swagger/v1/openapi.yaml
+permissions:
+  contents: read
