@@ -7,7 +7,9 @@ Rails.application.routes.draw do
     end
     resources :members, only: %i[create]
     resource  :me, only: %i[show], controller: "members" do
-      resource :membership_application, only: %i[create]
+      resource :membership_application, only: %i[create] do
+        put :cancel
+      end
     end  # singular: just MINE, no id
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

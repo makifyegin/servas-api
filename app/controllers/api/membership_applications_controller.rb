@@ -16,6 +16,20 @@ module Api
       end
     end
 
+    def cancel
+      application = @member.membership_applications.find_by!(status: MembershipApplication::OPEN_STATUSES)
+      authorize! :cancel, application
+      result = MembershipApplication::Cancel.call(membership_application: application)
+
+      if result.success?
+        render json: result[:membership_application], status: :ok
+      else
+        render json: { error: result[:error] }, status: :unprocessable_content
+      end
+    end
+
+
+
     private
 
     def set_member

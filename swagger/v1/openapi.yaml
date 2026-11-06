@@ -963,8 +963,7 @@ paths:
       - Api::MembershipApplication
       responses:
         '201':
-          description: responds 201 Created with an applied membership application
-            when the user is an amiko
+          description: lets the member apply again after canceling
           content:
             application/json:
               schema:
@@ -990,7 +989,7 @@ paths:
                 - created_at
                 - updated_at
               example:
-                id: 1
+                id: 2
                 member_id: 1
                 region_id: 1
                 status: applied
@@ -1075,6 +1074,79 @@ paths:
               - region_id
             example:
               region_id: '1'
+  "/api/me/membership_application/cancel":
+    put:
+      summary: cancel
+      tags:
+      - Api::MembershipApplication
+      responses:
+        '200':
+          description: keeps the canceled row so applications can be counted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  member_id:
+                    type: integer
+                  status:
+                    type: string
+                  region_id:
+                    type: integer
+                  id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                required:
+                - member_id
+                - status
+                - region_id
+                - id
+                - created_at
+                - updated_at
+              example:
+                member_id: 1
+                status: canceled
+                region_id: 1
+                id: 1
+                created_at: '2026-01-01T12:00:00.000Z'
+                updated_at: '2026-01-01T12:00:00.000Z'
+        '401':
+          description: responds 401 Unauthorized when no token is given
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Unauthorized
+        '404':
+          description: does not cancel the application of another member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Couldn't find MembershipApplication with [WHERE "membership_applications"."member_id"
+                  = ? AND "membership_applications"."status" IN (?, ?, ?, ?)]
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties: {}
+            example: {}
   "/api/members":
     post:
       summary: create
