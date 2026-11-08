@@ -12,7 +12,7 @@ class MembershipApplication < ApplicationRecord
     consent_pending: "consent_pending",
     approved: "approved",
     rejected: "rejected",
-    canceled: "canceled"
+    cancelled: "cancelled"
   }
 
   validate :only_one_open_application, on: :create

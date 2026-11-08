@@ -5,17 +5,17 @@ RSpec.describe "Creating a member", type: :request do
 
   before { stub_authenticated_user(sub: "amiko_user_exist") }
   it "responds 401 Unauthorized when no token is given" do
-    post "/api/members"
+    post "/api/members", as: :json
     expect(response).to have_http_status(:unauthorized)
   end
     it "responds 201 Created with an amiko member when the user is signed in" do
-      post "/api/members",  headers: headers
+      post "/api/members",  headers: headers, as: :json
       expect(response).to have_http_status(:created)
       expect(response.parsed_body["status"]).to eq("amiko")
     end
   it "responds 200 OK with the existing member when the user already has one" do
     create(:member, hydra_sub: "amiko_user_exist")
-    post "/api/members", headers: headers
+    post "/api/members", headers: headers, as: :json
     expect(response).to have_http_status(:ok)
     expect(Member.count).to eq(1)        # still only one row?
   end

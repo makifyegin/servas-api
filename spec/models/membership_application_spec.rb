@@ -18,7 +18,7 @@ RSpec.describe MembershipApplication, type: :model do
   end
 
   it "is valid when the member's earlier application was canceled" do
-    first = create(:membership_application, status: "canceled")
+    first = create(:membership_application, status: "cancelled")
     second = build(:membership_application, member: first.member)
     expect(second).to be_valid
   end

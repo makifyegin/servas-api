@@ -11,6 +11,7 @@ class Ability
     can(:create, Country) if Role.exists?(user_id: user_id, role: "si_admin")
     can(%i[create], Member)
     can(:create, MembershipApplication, member: { hydra_sub: user_id, status: "amiko" })
+    can(:index, MembershipApplication, member: { hydra_sub: user_id })
     can(:cancel, MembershipApplication, member: { hydra_sub: user_id }, status: MembershipApplication::OPEN_STATUSES)
   end
 end
