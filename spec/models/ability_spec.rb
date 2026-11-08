@@ -117,7 +117,7 @@ RSpec.describe Ability, type: :model do
     context "with my own closed application" do
       let(:me) { create(:member, hydra_sub: user_id) }
 
-      %w[approved rejected canceled].each do |status|
+      %w[approved rejected cancelled].each do |status|
         it "cannot cancel it when it is #{status}" do
           expect(ability).not_to be_able_to(:cancel, build(:membership_application, member: me, status:))
         end

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resource :membership_application, only: %i[create] do
         put :cancel
       end
+      resources :membership_applications, only: %i[index]
     end  # singular: just MINE, no id
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

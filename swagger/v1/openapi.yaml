@@ -153,6 +153,26 @@ paths:
                   been taken'
       requestBody:
         content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                country:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    group_id:
+                      type: integer
+                  required:
+                  - name
+                  - group_id
+              required:
+              - country
+            example:
+              country:
+                name: Ireland
+                group_id: 2
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -328,6 +348,22 @@ paths:
                 error: 'Validation failed: Name can''t be blank'
       requestBody:
         content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                region:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                  required:
+                  - name
+              required:
+              - region
+            example:
+              region:
+                name: West Midlands
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -611,6 +647,22 @@ paths:
                 error: 'Error updating region: Validation failed: Name can''t be blank'
       requestBody:
         content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                region:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                  required:
+                  - name
+              required:
+              - region
+            example:
+              region:
+                name: Yorkshire
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -875,6 +927,22 @@ paths:
                   been taken'
       requestBody:
         content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                country:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                  required:
+                  - name
+              required:
+              - country
+            example:
+              country:
+                name: New Country Name
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -1111,6 +1179,16 @@ paths:
                   Region must exist'
       requestBody:
         content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                region_id:
+                  type: integer
+              required:
+              - region_id
+            example:
+              region_id: 1
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -1155,7 +1233,7 @@ paths:
                 - updated_at
               example:
                 member_id: 1
-                status: canceled
+                status: cancelled
                 region_id: 1
                 id: 1
                 created_at: '2026-01-01T12:00:00.000Z'
@@ -1189,11 +1267,76 @@ paths:
                   = ? AND "membership_applications"."status" IN (?, ?, ?, ?)]
       requestBody:
         content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+            example: {}
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties: {}
             example: {}
+  "/api/me/membership_applications":
+    get:
+      summary: index
+      tags:
+      - Api::MembershipApplication
+      responses:
+        '200':
+          description: responds 200 OK with my applications, newest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    member_id:
+                      type: integer
+                    region_id:
+                      type: integer
+                    status:
+                      type: string
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                  required:
+                  - id
+                  - member_id
+                  - region_id
+                  - status
+                  - created_at
+                  - updated_at
+              example:
+              - id: 2
+                member_id: 1
+                region_id: 1
+                status: applied
+                created_at: '2025-12-31T12:00:00.000Z'
+                updated_at: '2026-01-01T12:00:00.000Z'
+              - id: 1
+                member_id: 1
+                region_id: 1
+                status: cancelled
+                created_at: '2025-12-30T12:00:00.000Z'
+                updated_at: '2026-01-01T12:00:00.000Z'
+        '401':
+          description: responds 401 Unauthorized when no token is given
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Unauthorized
   "/api/members":
     post:
       summary: create
@@ -1285,6 +1428,11 @@ paths:
                 error: Unauthorized
       requestBody:
         content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+            example: {}
           application/x-www-form-urlencoded:
             schema:
               type: object

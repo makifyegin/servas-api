@@ -13,55 +13,55 @@ RSpec.describe "Updating a country", type: :request do
   end
 
   it "responds 401 Unauthorized when no token is given" do
-    put("/api/countries/#{country.id}", params:)
+    put("/api/countries/#{country.id}", params:, as: :json)
     expect(response).to have_http_status(:unauthorized)
   end
 
   it "responds 403 Forbidden when the user is an ordinary member" do
     stub_authenticated_user(sub: "member1")
-    put("/api/countries/#{country.id}", headers:, params:)
+    put("/api/countries/#{country.id}", headers:, params:, as: :json)
     expect(response).to have_http_status(:forbidden)
   end
 
   it "responds 403 Forbidden when the user is the national secretary of another group" do
     stub_authenticated_user(sub: "secretary2")
     create(:role, user_id: "secretary2", role: "national_secretary", group: create(:group, name: "Servas Germany"))
-    put("/api/countries/#{country.id}", headers:, params:)
+    put("/api/countries/#{country.id}", headers:, params:, as: :json)
     expect(response).to have_http_status(:forbidden)
     expect(country.reload.name).to eq("United Kingdom")
   end
 
   it "keeps the country in its group when a group_id is sent", openapi: false do
     other_group = create(:group, name: "Servas Germany")
-    put("/api/countries/#{country.id}", headers:, params: { country: { group_id: other_group.id } })
+    put("/api/countries/#{country.id}", headers:, params: { country: { group_id: other_group.id } }, as: :json)
     expect(response).to have_http_status(:ok)
     expect(country.reload.group).not_to eq(other_group)
   end
 
   it "responds 200 OK with the updated country when the user is the national secretary of the country's group" do
-    put("/api/countries/#{country.id}", headers:, params:)
+    put("/api/countries/#{country.id}", headers:, params:, as: :json)
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body["name"]).to eq("New Country Name")
   end
 
   it "responds 422 Unprocessable Content when the name is blank" do
-    put("/api/countries/#{country.id}", headers:, params: { country: { name: "" } })
+    put("/api/countries/#{country.id}", headers:, params: { country: { name: "" } }, as: :json)
     expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "responds 422 Unprocessable Content when the name is already taken" do
     create(:country, name: "France", group: country.group)
-    put("/api/countries/#{country.id}", headers:, params: { country: { name: "France" } })
+    put("/api/countries/#{country.id}", headers:, params: { country: { name: "France" } }, as: :json)
     expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "responds 400 Bad Request when the country params are missing" do
-    put("/api/countries/#{country.id}", headers:)
+    put("/api/countries/#{country.id}", headers:, as: :json)
     expect(response).to have_http_status(:bad_request)
   end
 
   it "responds 404 Not Found when the country does not exist" do
-    put("/api/countries/0", headers:, params:)
+    put("/api/countries/0", headers:, params:, as: :json)
     expect(response).to have_http_status(:not_found)
   end
 end

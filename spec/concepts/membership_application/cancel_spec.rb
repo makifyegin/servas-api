@@ -10,10 +10,10 @@ RSpec.describe MembershipApplication::Cancel do
 
     expect(response).to be_success
     expect(response[:membership_application]).to eq(membership_application)
-    expect(membership_application.reload.status).to eq("canceled")
+    expect(membership_application.reload.status).to eq("cancelled")
   end
 
-  it "keeps the canceled row" do
+  it "keeps the cancelled row" do
     described_class.call(membership_application:)
     expect(MembershipApplication.find_by(id: membership_application.id)).to be_present
   end

@@ -28,6 +28,12 @@ module Api
       end
     end
 
+    def index
+      applications = @member.membership_applications.order(created_at: :desc)
+      authorize! :index, MembershipApplication
+      render json: applications, status: :ok
+    end
+
 
 
     private

@@ -12,6 +12,7 @@ class Ability
     can(%i[create], Member)
     can(:destroy, Member, hydra_sub: user_id)
     can(:create, MembershipApplication, member: { hydra_sub: user_id, status: "amiko" })
+    can(:index, MembershipApplication, member: { hydra_sub: user_id })
     can(:cancel, MembershipApplication, member: { hydra_sub: user_id }, status: MembershipApplication::OPEN_STATUSES)
   end
 end

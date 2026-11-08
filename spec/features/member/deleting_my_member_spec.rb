@@ -11,18 +11,18 @@ RSpec.describe "Deleting my member data", type: :request do
   end
 
   it "responds 401 Unauthorized when no token is given" do
-    delete "/api/me"
+    delete "/api/me", as: :json
     expect(response).to have_http_status(:unauthorized)
   end
 
   it "responds 404 Not Found when the user has not joined yet" do
-    delete("/api/me", headers:)
+    delete("/api/me", headers:, as: :json)
     expect(response).to have_http_status(:not_found)
   end
 
   it "responds 204 No Content and deletes the member" do
     member = create(:member, hydra_sub: "akif")
-    delete("/api/me", headers:)
+    delete("/api/me", headers:, as: :json)
 
     expect(response).to have_http_status(:no_content)
     expect(Member.find_by(id: member.id)).to be_nil
@@ -30,7 +30,7 @@ RSpec.describe "Deleting my member data", type: :request do
 
   it "revokes my Hydra sessions and deletes my Kratos identity" do
     create(:member, hydra_sub: "akif")
-    delete("/api/me", headers:)
+    delete("/api/me", headers:, as: :json)
 
     expect(HydraAdminApiClient).to have_received(:revoke_sessions).with(subject: "akif")
     expect(KratosAdminApiClient).to have_received(:delete_identity).with(id: "akif")
@@ -39,7 +39,7 @@ RSpec.describe "Deleting my member data", type: :request do
   it "deletes the member's membership applications too" do
     member = create(:member, hydra_sub: "akif")
     application = create(:membership_application, member:)
-    delete("/api/me", headers:)
+    delete("/api/me", headers:, as: :json)
 
     expect(MembershipApplication.find_by(id: application.id)).to be_nil
   end
@@ -47,7 +47,7 @@ RSpec.describe "Deleting my member data", type: :request do
   it "does not delete another member" do
     other = create(:member)
     create(:member, hydra_sub: "akif")
-    delete("/api/me", headers:)
+    delete("/api/me", headers:, as: :json)
 
     expect(Member.find_by(id: other.id)).to eq(other)
   end
@@ -55,7 +55,7 @@ RSpec.describe "Deleting my member data", type: :request do
   it "responds 422 Unprocessable Content when the member cannot be deleted" do
     create(:member, hydra_sub: "akif")
     allow(Member::Delete).to receive(:call).and_return(OperationResponse[error: "Error deleting member"])
-    delete("/api/me", headers:)
+    delete("/api/me", headers:, as: :json)
 
     expect(response).to have_http_status(:unprocessable_content)
     expect(response.parsed_body["error"]).to eq("Error deleting member")
