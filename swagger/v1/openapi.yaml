@@ -10,7 +10,7 @@ paths:
     get:
       summary: index
       tags:
-      - Api::Country
+      - Country
       responses:
         '200':
           description: responds 200 OK with all countries when the user is signed
@@ -65,7 +65,7 @@ paths:
     post:
       summary: create
       tags:
-      - Api::Country
+      - Country
       responses:
         '201':
           description: responds 201 Created with the new country when the user is
@@ -173,31 +173,11 @@ paths:
               country:
                 name: Ireland
                 group_id: 2
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                country:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    group_id:
-                      type: string
-                  required:
-                  - name
-                  - group_id
-              required:
-              - country
-            example:
-              country:
-                name: Ireland
-                group_id: '2'
   "/api/countries/{country_id}/regions":
     get:
       summary: index
       tags:
-      - Api::Region
+      - Region
       parameters:
       - name: country_id
         in: path
@@ -254,7 +234,7 @@ paths:
     post:
       summary: create
       tags:
-      - Api::Region
+      - Region
       parameters:
       - name: country_id
         in: path
@@ -364,27 +344,11 @@ paths:
             example:
               region:
                 name: West Midlands
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                region:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                  required:
-                  - name
-              required:
-              - region
-            example:
-              region:
-                name: West Midlands
   "/api/countries/{country_id}/regions/{id}":
     delete:
       summary: destroy
       tags:
-      - Api::Region
+      - Region
       parameters:
       - name: country_id
         in: path
@@ -459,7 +423,7 @@ paths:
     get:
       summary: show
       tags:
-      - Api::Region
+      - Region
       parameters:
       - name: country_id
         in: path
@@ -533,7 +497,7 @@ paths:
     put:
       summary: update
       tags:
-      - Api::Region
+      - Region
       parameters:
       - name: country_id
         in: path
@@ -663,27 +627,11 @@ paths:
             example:
               region:
                 name: Yorkshire
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                region:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                  required:
-                  - name
-              required:
-              - region
-            example:
-              region:
-                name: Yorkshire
   "/api/countries/{id}":
     delete:
       summary: destroy
       tags:
-      - Api::Country
+      - Country
       parameters:
       - name: id
         in: path
@@ -751,7 +699,7 @@ paths:
     get:
       summary: show
       tags:
-      - Api::Country
+      - Country
       parameters:
       - name: id
         in: path
@@ -818,7 +766,7 @@ paths:
     put:
       summary: update
       tags:
-      - Api::Country
+      - Country
       parameters:
       - name: id
         in: path
@@ -943,27 +891,11 @@ paths:
             example:
               country:
                 name: New Country Name
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                country:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                  required:
-                  - name
-              required:
-              - country
-            example:
-              country:
-                name: New Country Name
   "/api/me":
     delete:
       summary: destroy
       tags:
-      - Api::Member
+      - Member
       responses:
         '204':
           description: does not delete another member
@@ -1010,7 +942,7 @@ paths:
     get:
       summary: show
       tags:
-      - Api::Member
+      - Member
       responses:
         '200':
           description: responds 200 OK when the user is signed in
@@ -1075,7 +1007,7 @@ paths:
     post:
       summary: create
       tags:
-      - Api::MembershipApplication
+      - MembershipApplication
       responses:
         '201':
           description: lets the member apply again after canceling
@@ -1189,21 +1121,11 @@ paths:
               - region_id
             example:
               region_id: 1
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                region_id:
-                  type: string
-              required:
-              - region_id
-            example:
-              region_id: '1'
   "/api/me/membership_application/cancel":
     put:
       summary: cancel
       tags:
-      - Api::MembershipApplication
+      - MembershipApplication
       responses:
         '200':
           description: keeps the canceled row so applications can be counted
@@ -1272,16 +1194,11 @@ paths:
               type: object
               properties: {}
             example: {}
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties: {}
-            example: {}
   "/api/me/membership_applications":
     get:
       summary: index
       tags:
-      - Api::MembershipApplication
+      - MembershipApplication
       responses:
         '200':
           description: responds 200 OK with my applications, newest first
@@ -1341,7 +1258,7 @@ paths:
     post:
       summary: create
       tags:
-      - Api::Member
+      - Member
       responses:
         '200':
           description: responds 200 OK with the existing member when the user already
@@ -1362,9 +1279,7 @@ paths:
                   updated_at:
                     type: string
                   region_id:
-                    type:
-                    - integer
-                    - 'null'
+                    type: 'null'
                 required:
                 - hydra_sub
                 - status
@@ -1429,11 +1344,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              type: object
-              properties: {}
-            example: {}
-          application/x-www-form-urlencoded:
             schema:
               type: object
               properties: {}
