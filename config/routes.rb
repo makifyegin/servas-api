@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       resources :regions
     end
     resources :members, only: %i[create]
-    resource  :me, only: %i[show], controller: "members" do
+    resource  :me, only: %i[show destroy], controller: "members" do
       resource :membership_application, only: %i[create] do
         put :cancel
       end

@@ -14,5 +14,17 @@ module Api
       member = Member.find_by!(hydra_sub: @current_user)
       render json: member, status: :ok
     end
+
+    def destroy
+      member = Member.find_by!(hydra_sub: @current_user)
+      authorize! :destroy, member
+      result = Member::Delete.call(member_id: member.id)
+
+      if result.success?
+        head :no_content
+      else
+        render json: { error: result[:error] }, status: :unprocessable_content
+      end
+    end
   end
 end

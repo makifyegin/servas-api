@@ -7,7 +7,7 @@ gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 
-gem "json", "< 3"   # json 3.0 breaks Faraday's JSON parsing (Faraday 2.14.3)
+gem "json", "< 4"   # json 3.x works with Faraday 2.15+ (json 3.0 broke Faraday 2.14.3); recheck before json 4
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
@@ -64,7 +64,7 @@ gem "faker", "~> 3.8", groups: [ :development, :test ]
 
 gem "simplecov", "~> 1.3", group: :test
 
-gem "rspec-openapi", "~> 0.34.0", group: :test
+gem "rspec-openapi", "~> 0.36.0", group: :test
 
 gem "cancancan", "~> 3.7"
 
